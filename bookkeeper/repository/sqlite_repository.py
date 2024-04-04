@@ -3,7 +3,7 @@ import sqlite3
 from abc import ABC, abstractmethod
 from typing import Generic, TypeVar, Protocol, Any
 from bookkeeper.repository.abstract_repository import AbstractRepository, T
-
+from bookkeeper.models.category import Category
 class SQLiteRepository(AbstractRepository[T]):
     def __init__(self, db_file: str, cls:type) -> None:
         self.db_file = db_file
@@ -24,6 +24,30 @@ class SQLiteRepository(AbstractRepository[T]):
             cursor.close()
         return obj.pk
     
+    def add_empty(self) -> None:
+        with sqlite3.connect(self.db_file) as con:
+            cursor = con.cursor()
+            cursor.execute(f"INSERT INTO {self.table_name} DEFAULT VALUES")
+            con.commit()
+            cursor.close()
+        return cursor.lastrowid
+
+    def update(self, obj: T) -> None:
+        names = ' = ?, '.join(self.fields.keys()) + ' = ?'
+        values = [getattr(obj, x) for x in self.fields]
+        with sqlite3.connect(self.db_file) as con:
+            cursor = con.cursor()
+            cursor.execute(f'UPDATE {self.table_name} SET {names} WHERE ROWID = {obj.pk}', values)
+            con.commit()
+            cursor.close()
+
+    def update_item(self, row:int, col:str, value:Any) -> None:
+        with sqlite3.connect(self.db_file) as con:
+            cursor = con.cursor()
+            cursor.execute(f'UPDATE {self.table_name} SET {col} = ? WHERE rowid = ?', (value, row))
+            con.commit()
+            cursor.close()
+
     def get(self, pk: int) -> T | None:
         with sqlite3.connect(self.db_file) as con:
             cursor = con.cursor()
@@ -49,21 +73,31 @@ class SQLiteRepository(AbstractRepository[T]):
             cursor.close()        
         return res
 
-
-    def update(self, obj: T) -> None:
-        names = ' = ?, '.join(self.fields.keys()) + ' = ?'
-        values = [getattr(obj, x) for x in self.fields]
-        with sqlite3.connect(self.db_file) as con:
-            cursor = con.cursor()
-            cursor.execute(f'UPDATE {self.table_name} SET {names} WHERE ROWID = {obj.pk}', values)
-            con.commit()
-            cursor.close()
-
     def delete(self, pk: int) -> None:
         with sqlite3.connect(self.db_file) as con:
             cursor = con.cursor()
-            cursor.execute(f'DELETE FROM {self.table_name} WHERE ROWID = ?', (pk,))
-            con.commit()
+            #deleting category we need delete all subcatogories
+            if self.data_type == Category:
+                values = tuple([pk]+[cate.pk for cate in Category('name', pk=pk).get_subcategories(self)])  
+                condition = 'ROWID IN (' + ', '.join("?" * len(values)) + ')'
+                cursor.execute(f"DELETE FROM {self.table_name} WHERE {condition}", values)
+                con.commit()
+                #update rowid
+                counts = {}
+                cursor.execute(f"SELECT rowid FROM {self.table_name}")
+                rowids = cursor.fetchall()
+                for row in rowids:
+                    count = sum(1 for value in values if value < row[0])
+                    counts[row[0]] = count
+                for rowid in counts:
+                    cursor.execute(f'UPDATE {self.table_name} set ROWID = ROWID - ? WHERE ROWID = ?', (counts[rowid], rowid))
+                    con.commit()
+            else:
+                cursor.execute(f'DELETE FROM {self.table_name} WHERE ROWID = ?', (pk,))
+                con.commit()
+                #update rowid
+                cursor.execute(f'UPDATE {self.table_name} set ROWID = ROWID - 1 WHERE ROWID > ?', (pk,))
+                con.commit()
             cursor.close()
 
     def del_all(self) -> None:

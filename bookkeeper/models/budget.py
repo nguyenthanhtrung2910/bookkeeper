@@ -12,6 +12,5 @@ class Budget:
     pk - id записи в базе данных
     """
     amount: int
-    category: int
     tern: str = 'month'
     pk: int = 0

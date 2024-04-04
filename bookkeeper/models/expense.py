@@ -20,6 +20,6 @@ class Expense:
     amount: int
     category: int
     expense_date: datetime = field(default_factory=datetime.now)
-    date: datetime = field(default_factory=datetime.now)
+    date: str = field(default_factory=datetime.now().strftime('%Y-%m-%d'))
     comment: str = ''
     pk: int = 0

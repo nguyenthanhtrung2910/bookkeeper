@@ -116,3 +116,9 @@ class Category:
             repo.add(cat)
             created[child] = cat
         return list(created.values())
+    
+    def get_all_children(self, repo: AbstractRepository['Category']
+                          ) -> Iterator['Category']:
+        for cate in repo.get_all():
+            if cate.parent == self.pk:
+                yield cate
