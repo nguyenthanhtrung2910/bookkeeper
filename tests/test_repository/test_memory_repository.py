@@ -5,6 +5,7 @@ import pytest
 
 @pytest.fixture
 def custom_class():
+
     class Custom():
         pk = 0
 

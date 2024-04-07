@@ -6,26 +6,26 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1061</width>
+    <width>980</width>
     <height>813</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Bookkeeper</string>
   </property>
-  <widget class="QWidget" name="centralwidget">
+  <widget class="QWidget" name="central_widget">
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>30</y>
-      <width>761</width>
+      <y>50</y>
+      <width>681</width>
       <height>391</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QTableWidget" name="tableWidget">
+      <widget class="QTableWidget" name="table_widget_expense">
        <column>
         <property name="text">
          <string>Date</string>
@@ -54,14 +54,14 @@
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>450</y>
+      <y>480</y>
       <width>681</width>
       <height>121</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_2">
      <item>
-      <widget class="QTableWidget" name="tableWidget_2">
+      <widget class="QTableWidget" name="table_widget_budget">
        <row/>
        <row/>
        <row/>
@@ -114,7 +114,7 @@
      </item>
     </layout>
    </widget>
-   <widget class="QPushButton" name="save_button">
+   <widget class="QPushButton" name="button_save_expense">
     <property name="geometry">
      <rect>
       <x>0</x>
@@ -127,7 +127,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="add_button">
+   <widget class="QPushButton" name="button_add_expense">
     <property name="geometry">
      <rect>
       <x>30</x>
@@ -140,7 +140,7 @@
      <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="delete_button">
+   <widget class="QPushButton" name="button_delete_expense">
     <property name="geometry">
      <rect>
       <x>60</x>
@@ -156,15 +156,15 @@
    <widget class="QWidget" name="verticalLayoutWidget_3">
     <property name="geometry">
      <rect>
-      <x>760</x>
-      <y>30</y>
+      <x>680</x>
+      <y>50</y>
       <width>301</width>
       <height>391</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="verticalLayout_3">
      <item>
-      <widget class="QTreeWidget" name="treeWidget">
+      <widget class="QTreeWidget" name="tree_widget_category">
        <column>
         <property name="text">
          <string>Category</string>
@@ -174,10 +174,10 @@
      </item>
     </layout>
    </widget>
-   <widget class="QPushButton" name="add_button_tree">
+   <widget class="QPushButton" name="button_add_category">
     <property name="geometry">
      <rect>
-      <x>790</x>
+      <x>710</x>
       <y>0</y>
       <width>31</width>
       <height>31</height>
@@ -187,43 +187,128 @@
      <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="save_button_tree">
+   <widget class="QPushButton" name="button_save_category">
+    <property name="geometry">
+     <rect>
+      <x>680</x>
+      <y>0</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="button_delete_category">
+    <property name="geometry">
+     <rect>
+      <x>770</x>
+      <y>0</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="button_add_child_category">
+    <property name="geometry">
+     <rect>
+      <x>740</x>
+      <y>0</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit">
     <property name="geometry">
      <rect>
       <x>760</x>
-      <y>0</y>
-      <width>31</width>
-      <height>31</height>
+      <y>490</y>
+      <width>221</width>
+      <height>25</height>
      </rect>
-    </property>
-    <property name="text">
-     <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="delete_button_tree">
+   <widget class="QComboBox" name="combo_box_chose_category">
     <property name="geometry">
      <rect>
-      <x>850</x>
-      <y>0</y>
-      <width>31</width>
-      <height>31</height>
+      <x>760</x>
+      <y>530</y>
+      <width>221</width>
+      <height>25</height>
      </rect>
-    </property>
-    <property name="text">
-     <string/>
     </property>
    </widget>
-   <widget class="QPushButton" name="add_child_button">
+   <widget class="QLabel" name="label_4">
     <property name="geometry">
      <rect>
-      <x>820</x>
-      <y>0</y>
+      <x>710</x>
+      <y>490</y>
       <width>31</width>
-      <height>31</height>
+      <height>17</height>
      </rect>
     </property>
     <property name="text">
-     <string/>
+     <string>Sum</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_1">
+    <property name="geometry">
+     <rect>
+      <x>690</x>
+      <y>530</y>
+      <width>67</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Category</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>30</y>
+      <width>67</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Expense</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>680</x>
+      <y>30</y>
+      <width>67</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Category</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_3">
+    <property name="geometry">
+     <rect>
+      <x>0</x>
+      <y>460</y>
+      <width>67</width>
+      <height>17</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Budget</string>
     </property>
    </widget>
   </widget>
@@ -232,7 +317,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1061</width>
+     <width>980</width>
      <height>22</height>
     </rect>
    </property>

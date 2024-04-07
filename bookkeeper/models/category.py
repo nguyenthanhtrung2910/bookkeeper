@@ -1,15 +1,15 @@
 """
 Модель категории расходов
 """
-from collections import defaultdict
-from dataclasses import dataclass
-from typing import Iterator
+import collections
+import dataclasses
+import typing
 
-from ..repository.abstract_repository import AbstractRepository
+from bookkeeper.repository import abstract_repository
 
 
-@dataclass
-class Category:
+@dataclasses.dataclass
+class Category():
     """
     Категория расходов, хранит название в атрибуте name и ссылку (id) на
     родителя (категория, подкатегорией которой является данная) в атрибуте parent.
@@ -19,8 +19,9 @@ class Category:
     parent: int | None = None
     pk: int = 0
 
-    def get_parent(self,
-                   repo: AbstractRepository['Category']) -> 'Category | None':
+    def get_parent(
+        self, repo: abstract_repository.AbstractRepository['Category']
+    ) -> 'Category | None':
         """
         Получить родительскую категорию в виде объекта Category
         Если метод вызван у категории верхнего уровня, возвращает None
@@ -37,9 +38,9 @@ class Category:
             return None
         return repo.get(self.parent)
 
-    def get_all_parents(self,
-                        repo: AbstractRepository['Category']
-                        ) -> Iterator['Category']:
+    def get_all_parents(
+        self, repo: abstract_repository.AbstractRepository['Category']
+    ) -> typing.Iterator['Category']:
         """
         Получить все категории верхнего уровня в иерархии.
 
@@ -57,9 +58,9 @@ class Category:
         yield parent
         yield from parent.get_all_parents(repo)
 
-    def get_subcategories(self,
-                          repo: AbstractRepository['Category']
-                          ) -> Iterator['Category']:
+    def get_subcategories(
+        self, repo: abstract_repository.AbstractRepository['Category']
+    ) -> typing.Iterator['Category']:
         """
         Получить все подкатегории из иерархии, т.е. непосредственные
         подкатегории данной, все их подкатегории и т.д.
@@ -74,22 +75,22 @@ class Category:
         """
 
         def get_children(graph: dict[int | None, list['Category']],
-                         root: int) -> Iterator['Category']:
+                         root: int) -> typing.Iterator['Category']:
             """ dfs in graph from root """
             for x in graph[root]:
                 yield x
                 yield from get_children(graph, x.pk)
 
-        subcats = defaultdict(list)
+        subcats = collections.defaultdict(list)
         for cat in repo.get_all():
             subcats[cat.parent].append(cat)
         return get_children(subcats, self.pk)
 
     @classmethod
     def create_from_tree(
-            cls,
-            tree: list[tuple[str, str | None]],
-            repo: AbstractRepository['Category']) -> list['Category']:
+        cls, tree: list[tuple[str, str | None]],
+        repo: abstract_repository.AbstractRepository['Category']
+    ) -> list['Category']:
         """
         Создать дерево категорий из списка пар "потомок-родитель".
         Список должен быть топологически отсортирован, т.е. потомки
@@ -112,13 +113,15 @@ class Category:
         """
         created: dict[str, Category] = {}
         for child, parent in tree:
-            cat = cls(child, created[parent].pk if parent is not None else None)
+            cat = cls(child,
+                      created[parent].pk if parent is not None else None)
             repo.add(cat)
             created[child] = cat
         return list(created.values())
-    
-    def get_all_children(self, repo: AbstractRepository['Category']
-                          ) -> Iterator['Category']:
+
+    def get_all_children(
+        self, repo: abstract_repository.AbstractRepository['Category']
+    ) -> typing.Iterator['Category']:
         for cate in repo.get_all():
             if cate.parent == self.pk:
                 yield cate

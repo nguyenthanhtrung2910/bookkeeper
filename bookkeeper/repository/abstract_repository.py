@@ -7,21 +7,21 @@
 использовать его для иных целей.
 """
 
-from abc import ABC, abstractmethod
-from typing import Generic, TypeVar, Protocol, Any
+import abc
+import typing
 
 
-class Model(Protocol):  # pylint: disable=too-few-public-methods
+class Model(typing.Protocol):  # pylint: disable=too-few-public-methods
     """
     Модель должна содержать атрибут pk
     """
-    pk: int
+    pk : int
 
 
-T = TypeVar('T', bound=Model)
+T = typing.TypeVar('T', bound=Model)
 
 
-class AbstractRepository(ABC, Generic[T]):
+class AbstractRepository(abc.ABC, typing.Generic[T]):
     """
     Абстрактный репозиторий.
     Абстрактные методы:
@@ -32,29 +32,29 @@ class AbstractRepository(ABC, Generic[T]):
     delete
     """
 
-    @abstractmethod
+    @abc.abstractmethod
     def add(self, obj: T) -> int:
         """
         Добавить объект в репозиторий, вернуть id объекта,
         также записать id в атрибут pk.
         """
 
-    @abstractmethod
+    @abc.abstractmethod
     def get(self, pk: int) -> T | None:
         """ Получить объект по id """
 
-    @abstractmethod
-    def get_all(self, where: dict[str, Any] | None = None) -> list[T]:
+    @abc.abstractmethod
+    def get_all(self, where: dict[str, typing.Any] | None = None) -> list[T]:
         """
         Получить все записи по некоторому условию
         where - условие в виде словаря {'название_поля': значение}
         если условие не задано (по умолчанию), вернуть все записи
         """
 
-    @abstractmethod
+    @abc.abstractmethod
     def update(self, obj: T) -> None:
         """ Обновить данные об объекте. Объект должен содержать поле pk. """
 
-    @abstractmethod
+    @abc.abstractmethod
     def delete(self, pk: int) -> None:
         """ Удалить запись """

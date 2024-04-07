@@ -1,8 +1,7 @@
-from dataclasses import dataclass
-from datetime import datetime
+import dataclasses
 
 
-@dataclass(slots=True)
+@dataclasses.dataclass(slots=True)
 class Budget:
     """
     Бюджет

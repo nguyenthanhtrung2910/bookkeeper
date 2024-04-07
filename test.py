@@ -20,7 +20,7 @@ from datetime import datetime
 # repo.add(Expense(50, 2))
 # repo.add(Expense(50, 3))
 
-repo = SQLiteRepository[Category]("tutorial.db", Category)
+repo = SQLiteRepository[Expense]("tutorial.db", Expense)
 # repo.del_all()
 # repo.add(Category('food'))
 # repo.add(Category('fish', 1))

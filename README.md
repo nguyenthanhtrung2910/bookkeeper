@@ -108,3 +108,17 @@ poetry run flake8 bookkeeper
 
 Для сдачи работы достаточно прислать ссылку на свой проект на GitHub в форму «Добавить ответ на задание» в ЛМС, 
 pull-request создавать не надо.
+## Как использовать
+### Запустить строчнуо команду:
+```
+python3 main.py
+```
+### Интерфейс приложения выглядит следующем образом:
+
+![](Screenshot.png)
+
+* Кпопкой <img src="assets/install.png" alt="Image Description" width="15" height="15"> можем сохранить все изменения.
+* Кпопкой <img src="assets/add.png" alt="Image Description" width="15" height="15"> можем добавить новую строку.
+* Кпопкой <img src="assets/folder.png" alt="Image Description" width="15" height="15"> можем добавить подкатегорию.
+* Кпопкой <img src="assets/delete.png" alt="Image Description" width="15" height="15"> можем удалить выбранную строку. Удалить категорию тоже удалить все её подкатегории.
+Можем выбирать категориию, по которой вычиляется сумма расходод.

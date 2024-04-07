@@ -14,13 +14,11 @@ def test_create_tree():
             child2
         parent2
     ''')
-    assert read_tree(text.splitlines()) == [
-        ('parent1', None),
-        ('child1', 'parent1'),
-        ('grandchild', 'child1'),
-        ('child2', 'parent1'),
-        ('parent2', None)
-    ]
+    assert read_tree(text.splitlines()) == [('parent1', None),
+                                            ('child1', 'parent1'),
+                                            ('grandchild', 'child1'),
+                                            ('child2', 'parent1'),
+                                            ('parent2', None)]
 
 
 def test_ignore_empty_strings():
@@ -33,13 +31,11 @@ def test_ignore_empty_strings():
 
         parent2
     ''')
-    assert read_tree(text.splitlines()) == [
-        ('parent1', None),
-        ('child1', 'parent1'),
-        ('grandchild', 'child1'),
-        ('child2', 'parent1'),
-        ('parent2', None)
-    ]
+    assert read_tree(text.splitlines()) == [('parent1', None),
+                                            ('child1', 'parent1'),
+                                            ('grandchild', 'child1'),
+                                            ('child2', 'parent1'),
+                                            ('parent2', None)]
 
 
 def test_indentation_error():
@@ -64,10 +60,6 @@ def test_with_file():
     with tempfile.TemporaryFile('w+') as f:
         f.write(text)
         f.seek(0)
-        assert read_tree(f) == [
-            ('parent1', None),
-            ('child1', 'parent1'),
-            ('grandchild', 'child1'),
-            ('child2', 'parent1'),
-            ('parent2', None)
-        ]
+        assert read_tree(f) == [('parent1', None), ('child1', 'parent1'),
+                                ('grandchild', 'child1'),
+                                ('child2', 'parent1'), ('parent2', None)]
