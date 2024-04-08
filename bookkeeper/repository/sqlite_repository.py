@@ -117,7 +117,7 @@ class SQLiteRepository(
                 for row in rowids:
                     count = sum(1 for value in values if value < row[0])
                     counts[row[0]] = count
-                for rowid in counts.items():
+                for rowid in counts.keys():
                     cursor.execute(
                         f'UPDATE {self.table_name} set ROWID = ROWID - ? WHERE ROWID = ?',
                         (counts[rowid], rowid))
