@@ -9,7 +9,6 @@ from bookkeeper.models import expense
 from bookkeeper.models import category
 from bookkeeper.repository import abstract_repository
 from bookkeeper.view import ui_mainwindow
-from bookkeeper.view import errordialog
 
 
 @dataclasses.dataclass(slots=True)
@@ -34,8 +33,6 @@ class MainWindow(QtWidgets.QMainWindow):
     ) -> None:
         super(MainWindow, self).__init__()
         self.ui = ui_mainwindow.Ui_MainWindow()
-        self.category_exist_dialog = errordialog.Dialog()
-        self.category_exist_dialog.label.setText(f'Category already exists')
         self.ui.setupUi(self)
         self.ui.table_widget_expense.setColumnWidth(0, 200)
         self.ui.table_widget_expense.setColumnWidth(1, 80)
@@ -140,10 +137,11 @@ class MainWindow(QtWidgets.QMainWindow):
             col).text().lower()
         #we only save newest change for one item
         for c in self.expense_table_changes:
-            if c.operator == 'update' and c.row == row and c.col == column_name:
-                self.expense_table_changes.remove(c)
+            if c.operator == 'update' and c.change_on_item is item:
+                c.new_value = value
+                return
         self.expense_table_changes.append(
-            Change('update', row, column_name, value))
+            Change('update', row, column_name, value, change_on_item=item))
 
     @QtCore.Slot()
     def handle_expense_table_adding_row(self) -> None:
@@ -181,7 +179,6 @@ class MainWindow(QtWidgets.QMainWindow):
                 return
         self.category_tree_changes.append(
             Change('update', new_value=new_text, old_value=old_text, change_on_item=item))
-        
 
     def get_child_items(
         self, parent_item: QtWidgets.QTreeWidgetItem

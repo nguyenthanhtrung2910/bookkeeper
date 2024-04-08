@@ -2,17 +2,21 @@ import re
 import sqlite3
 import inspect
 import datetime
+
+from PySide6 import QtWidgets
+from PySide6 import QtCore
+
 from bookkeeper.models import expense
 from bookkeeper.models import category
 from bookkeeper.repository import sqlite_repository
-from PySide6 import QtWidgets
-from PySide6 import QtCore
 from bookkeeper.view import mainwindow
 from bookkeeper.view import errordialog
 
 
 class Presenter:
-
+    """
+    presenter
+    """
     def __init__(self, db_file: str) -> None:
         self.expense_repo = sqlite_repository.SQLiteRepository[
             expense.Expense](db_file, expense.Expense)
@@ -89,22 +93,22 @@ class Presenter:
                 if change.operator == 'update':
                     if change.new_value == '':
                         continue
+                    if change.col == 'category':
+                        value = self.category_repo.get_all(
+                            {'name': change.new_value})[0].pk
+                    elif change.col == 'date':
+                        if not re.match(r'^[0-9]{4}-[0-9]{2}-[0-9]{2}$',
+                                        change.new_value):
+                            self.dialog.label.setText("")
+                            self.dialog.label.setText(
+                                'Date format illegal')
+                            self.dialog.exec()
+                            return
                     else:
-                        if change.col == 'category':
-                            value = self.category_repo.get_all(
-                                {'name': change.new_value})[0].pk
-                        elif change.col == 'date':
-                            if not re.match(r'^[0-9]{4}-[0-9]{2}-[0-9]{2}$',
-                                            change.new_value):
-                                self.dialog.label.setText("")
-                                self.dialog.label.setText(
-                                    f'Date format illegal')
-                                self.dialog.exec()
-                                return
-                        else:
-                            value = inspect.get_annotations(
-                                expense.Expense)[change.col](change.new_value)
-                        continue
+                        value = inspect.get_annotations(
+                            expense.Expense)[change.col](change.new_value)
+                    continue
+
         except ValueError:
             self.dialog.label.setText("")
             self.dialog.label.setText(
@@ -167,7 +171,7 @@ class Presenter:
                     continue
                 if change.new_value in all_tree_item_text:
                     self.dialog.label.setText("")
-                    self.dialog.label.setText(f'Category already exists')
+                    self.dialog.label.setText('Category already exists')
                     self.dialog.exec()
                     return
 
@@ -185,7 +189,7 @@ class Presenter:
                         item.setText(change.new_value)
             if change.operator == 'add':
                 last_row_id = self.category_repo.add_empty()
-                if change.old_value != None:
+                if change.old_value is not None:
                     parent_id = self.category_repo.get_all(
                         {'name': change.old_value})[0].pk
                 else:

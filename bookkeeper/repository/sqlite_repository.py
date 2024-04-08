@@ -72,13 +72,13 @@ class SQLiteRepository(
     ) -> list[abstract_repository.T]:
         with sqlite3.connect(self.db_file) as con:
             cursor = con.cursor()
-            if where == None:
+            if where is None:
                 cursor.execute(f'SELECT rowid,  * FROM {self.table_name}')
                 res = [
                     self.data_type(*(list(data[1:]) + [data[0]]))
                     for data in cursor.fetchall()
                 ]
-            elif next(iter(where.values())) == None:
+            elif next(iter(where.values())) is None:
                 cursor.execute(
                     f'SELECT rowid, * FROM {self.table_name} WHERE {next(iter(where.keys()))} IS NULL'
                 )
@@ -117,7 +117,7 @@ class SQLiteRepository(
                 for row in rowids:
                     count = sum(1 for value in values if value < row[0])
                     counts[row[0]] = count
-                for rowid in counts:
+                for rowid in counts.items():
                     cursor.execute(
                         f'UPDATE {self.table_name} set ROWID = ROWID - ? WHERE ROWID = ?',
                         (counts[rowid], rowid))
