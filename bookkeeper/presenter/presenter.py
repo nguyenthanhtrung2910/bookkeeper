@@ -48,6 +48,7 @@ class Presenter:
 
     def get_sum_amount_by(self, time: str) -> int:
         conn = sqlite3.connect(self.expense_repo.db_file)
+        conn.execute("PRAGMA foreign_keys = ON")
         cursor = conn.cursor()
         if time == 'day':
             cursor.execute(
@@ -71,6 +72,7 @@ class Presenter:
         if not category:
             return
         conn = sqlite3.connect(self.expense_repo.db_file)
+        conn.execute("PRAGMA foreign_keys = ON")
         cursor = conn.cursor()
         if category == 'All':
             cursor.execute("SELECT SUM(amount) FROM expense")
